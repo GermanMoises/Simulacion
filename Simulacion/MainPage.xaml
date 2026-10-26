@@ -1,0 +1,161 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Simulacion.ViewModels"
+             x:Class="Simulacion.MainPage"
+             BackgroundColor="#F1F5F9">
+
+    <ContentPage.BindingContext>
+        <local:SimulationViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+
+        <Grid RowDefinitions="Auto, Auto, Auto, *">
+
+            <!-- 1. Título Header -->
+            <Border Grid.Row="0" BackgroundColor="White" StrokeThickness="0" Margin="0,0,0,15" Padding="20,15">
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,2" Radius="5" Opacity="0.05" />
+                </Border.Shadow>
+                <Label Text= "Simulador de Revisión Periódica" 
+                FontSize="22" 
+                FontAttributes="Bold" 
+                TextColor="#0F172A" 
+                HorizontalOptions="Start" />
+            </Border>
+
+            <!-- 2. Panel de Configuración -->
+            <Border Grid.Row="1" Margin="20,0,20,15" Stroke="#E2E8F0" StrokeThickness="1" BackgroundColor="White">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Padding="20" Spacing="20">
+                    <Label Text="Parámetros de Simulación" FontAttributes="Bold" FontSize="16" TextColor="#475569" Margin="0,0,0,-5"/>
+
+                    <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto" RowSpacing="15" ColumnSpacing="20">
+
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="5">
+                            <Label Text="Tiempo Entrega (días)" TextColor="#64748B" FontSize="13" FontAttributes="Bold"/>
+                            <Border Stroke="#CBD5E1" StrokeThickness="1" BackgroundColor="#F8FAFC" Padding="10,0" HeightRequest="40">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="6" />
+                                </Border.StrokeShape>
+                                <Entry Text="{Binding LeadTime}" Keyboard="Numeric" TextColor="#0F172A" BackgroundColor="Transparent"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="5">
+                            <Label Text="Días a simular por corrida" TextColor="#64748B" FontSize="13" FontAttributes="Bold"/>
+                            <Border Stroke="#CBD5E1" StrokeThickness="1" BackgroundColor="#F8FAFC" Padding="10,0" HeightRequest="40">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="6" />
+                                </Border.StrokeShape>
+                                <Entry Text="{Binding SimulationDays}" Keyboard="Numeric" TextColor="#0F172A" BackgroundColor="Transparent"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="5">
+                            <Label Text="Número de Corridas" TextColor="#0284C7" FontSize="13" FontAttributes="Bold"/>
+                            <Border Stroke="#7DD3FC" StrokeThickness="2" BackgroundColor="#F0F9FF" Padding="10,0" HeightRequest="40">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="6" />
+                                </Border.StrokeShape>
+                                <Entry Text="{Binding SimulationRuns}" Keyboard="Numeric" FontAttributes="Bold" TextColor="#0369A1" BackgroundColor="Transparent"/>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Button Text="▶ EJECUTAR SIMULACIÓN" 
+                     Command="{Binding RunSimulationCommand}" 
+                     BackgroundColor="#2563EB" 
+                     TextColor="White" 
+                     FontAttributes="Bold"
+                     FontSize="15"
+                     CornerRadius="8" 
+                     HeightRequest="48"
+                     Margin="0,5,0,0" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 3. Panel de Promedios -->
+            <Border Grid.Row="2" Margin="20,0,20,15" StrokeThickness="0" BackgroundColor="Transparent">
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="15">
+
+                    <Border Grid.Column="0" BackgroundColor="White" Stroke="#E2E8F0" StrokeThickness="1" Padding="15">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="COSTO PERDIDO PROM." FontSize="11" TextColor="#64748B" FontAttributes="Bold"/>
+                            <Label Text="{Binding AverageCost, StringFormat='${0:F2}'}" FontAttributes="Bold" FontSize="24" TextColor="#DC2626"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Column="1" BackgroundColor="White" Stroke="#E2E8F0" StrokeThickness="1" Padding="15">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="VENTAS PERDIDAS PROM." FontSize="11" TextColor="#64748B" FontAttributes="Bold"/>
+                            <Label Text="{Binding AverageLostSales, StringFormat='{0:F2} pzas'}" FontAttributes="Bold" FontSize="24" TextColor="#0F172A"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Column="2" BackgroundColor="White" Stroke="#E2E8F0" StrokeThickness="1" Padding="15">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="INVENTARIO FINAL PROM." FontSize="11" TextColor="#64748B" FontAttributes="Bold"/>
+                            <Label Text="{Binding AverageFinalInventory, StringFormat='{0:F2} pzas'}" FontAttributes="Bold" FontSize="24" TextColor="#16A34A"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- 4. Tabla Dinámica -->
+            <Border Grid.Row="3" Margin="20,0,20,20" Stroke="#E2E8F0" StrokeThickness="1" BackgroundColor="White">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+
+                <Grid RowDefinitions="Auto, *">
+                    <Label Grid.Row="0" Text="Detalle Diario (Muestra de la última corrida)" FontSize="15" FontAttributes="Bold" TextColor="#334155" Margin="20,15,20,10" />
+
+                    <CollectionView Grid.Row="1" ItemsSource="{Binding SimulationResults}">
+                        <CollectionView.Header>
+                            <Grid ColumnDefinitions="0.8*, 1.2*, 1*, 1*, 1*, 1.2*" BackgroundColor="#0F172A" Padding="10,12">
+                                <Label Text="Día" FontAttributes="Bold" FontSize="13" TextColor="White" Grid.Column="0" HorizontalTextAlignment="Center"/>
+                                <Label Text="Inv. Inicial" FontAttributes="Bold" FontSize="13" TextColor="White" Grid.Column="1" HorizontalTextAlignment="Center"/>
+                                <Label Text="Demanda" FontAttributes="Bold" FontSize="13" TextColor="White" Grid.Column="2" HorizontalTextAlignment="Center"/>
+                                <Label Text="Inv. Final" FontAttributes="Bold" FontSize="13" TextColor="White" Grid.Column="3" HorizontalTextAlignment="Center"/>
+                                <Label Text="A Pedir" FontAttributes="Bold" FontSize="13" TextColor="White" Grid.Column="4" HorizontalTextAlignment="Center"/>
+                                <Label Text="Costo Pérd." FontAttributes="Bold" FontSize="13" TextColor="#FCA5A5" Grid.Column="5" HorizontalTextAlignment="Center"/>
+                            </Grid>
+                        </CollectionView.Header>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="0.8*, 1.2*, 1*, 1*, 1*, 1.2*" Padding="10,12" BackgroundColor="Transparent">
+                                    <Label Text="{Binding Day}" TextColor="#475569" FontAttributes="Bold" Grid.Column="0" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                    <Label Text="{Binding InitialInventory}" TextColor="#334155" Grid.Column="1" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                    <Label Text="{Binding Demand}" TextColor="#334155" Grid.Column="2" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                    <Label Text="{Binding FinalInventory}" TextColor="#334155" Grid.Column="3" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                    <Label Text="{Binding OrderedQuantity}" TextColor="#334155" Grid.Column="4" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                    <Label Text="{Binding LostSalesCost, StringFormat='${0:F2}'}" TextColor="#EF4444" FontAttributes="Bold" Grid.Column="5" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+
+                                    <BoxView Grid.ColumnSpan="6" HeightRequest="1" Color="#F1F5F9" VerticalOptions="End"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+            </Border>
+
+        </Grid>
+
+    </ScrollView>
+
+   
+</ContentPage>
